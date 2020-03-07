@@ -1,0 +1,254 @@
+---
+title: "class16"
+author: "Meisha Khan"
+date: "2/28/2020"
+output: html_document
+---
+## live code: 
+http://tinyurl.com/class16-bggn213
+
+## About our Input DATA
+
+The data for for hands-on session comes from GEO entry: GSE37704, which is associated with the following publication:
+
+Trapnell C, Hendrickson DG, Sauvageau M, Goff L et al. "Differential analysis of gene regulation at transcript resolution with RNA-seq". Nat Biotechnol 2013 Jan;31(1):46-53. PMID: 23222703
+The authors report on differential analysis of lung fibroblasts in response to loss of the developmental transcription factor HOXA1. Their results and others indicate that HOXA1 is required for lung fibroblast and HeLa cell cycle progression. In particular their analysis show that "loss of HOXA1 results in significant expression level changes in thousands of individual transcripts, along with isoform switching events in key regulators of the cell cycle". For our session we have used their Sailfish gene-level estimated counts and hence are restricted to protein-coding genes only.
+
+#Section 1. Differential Expression Analysis
+
+```{r}
+metaFile <- "data/GSE37704_metadata.csv"
+countFile <- "data/GSE37704_featurecounts.csv"
+```
+
+
+# Import metadata and take a peak
+
+```{r}
+colData = read.csv("GSE37704_metadata.csv", row.names=1)
+head(colData)
+```
+
+
+```{r}
+rawcountData = read.csv("GSE37704_featurecounts.csv", row.names=1)
+head(rawcountData)
+```
+
+
+#Q. Complete the code below to remove the troublesome first column from countData
+Note we need to remove the odd first $length col
+
+```{r}
+countData <- rawcountData[,-1] 
+head(countData)
+```
+
+```{r}
+nrow(countData)
+ncol(countData)
+dim(countData)
+```
+
+there are genes that have zero counts in all samples (i.e., columns). We should remove these. 
+
+First, identify the zero sum rows. 
+Second, exclude zero sum rows. 
+
+```{r}
+countData <- countData[ rowSums(countData) != 0, ]
+```
+OR
+```{r}
+inds <- rowSums(countData) != 0
+countData <- countData[ inds, ]
+```
+
+number of genes with differential expression data (excluding zero sum rows). 
+
+```{r}
+nrow(countData)
+```
+
+#Running DESeq2
+
+Nice now lets setup the DESeqDataSet object required for the DESeq() function and then run the DESeq pipeline. This is again similar to our last days hands-on session.
+
+```{r}
+dds = DESeqDataSetFromMatrix(countData=countData,
+                             colData=colData,
+                             design=~condition)
+dds = DESeq(dds)
+```
+
+
+```{r}
+res <- results(dds)
+head(res)
+```
+
+ 
+```{r}
+plot(res$log2FoldChange, -log(res$padj))
+```
+use log to access values around p > 0.05
+flipped 
+use negative to flip again to access genes with significance
+
+```{r}
+# Make a color vector for all genes
+mycols <- rep("gray", nrow(res) )
+
+# Color red the genes with absolute fold change above 2
+mycols[ abs(res$log2FoldChange) > 2 ] <- "red"
+
+# Color blue those with adjusted p-value less than 0.01
+#  and absolute fold change more than 2
+inds <- (res$pvalue < 0.01) & (abs(res$log2FoldChange) > 2 )
+mycols[ inds ] <- "blue"
+
+plot(res$log2FoldChange, -log(res$padj), col= mycols, xlab = 'Log2(FoldChange)', ylab = '-Log(PValue)' )
+```
+
+
+# Adding Gene Annotation
+
+Q. Use the mapIDs() function multiple times to add SYMBOL, ENTREZID and GENENAME annotation to our results by completing the code below.
+
+Install some bioconductor packages
+
+```{r}
+#BiocManager::install("AnnotationDbi")
+#BiocManager::install("org.Hs.eg.db")
+```
+
+```{r}
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+
+columns(org.Hs.eg.db)
+```
+
+```{r}
+results <- write.csv(res)
+```
+
+
+Let's map our ENSEMBL gene IDs to the more conventional gene SYMBOL. 
+
+
+```{r}
+res$symbol <- mapIds(org.Hs.eg.db,
+        keys = row.names(res),
+        keytype = "ENSEMBL", 
+        column = "SYMBOL",
+        multiVals = "first")
+
+res$name <- mapIds(org.Hs.eg.db,
+        keys = row.names(res),
+        keytype = "ENSEMBL", 
+        column = "GENENAME",
+        multiVals = "first")
+
+res$entrez <- mapIds(org.Hs.eg.db,
+        keys = row.names(res),
+        keytype = "ENSEMBL", 
+        column = "ENTREZID",
+        multiVals = "first")
+
+head(res)
+```
+
+
+Save our annotated results. 
+
+```{r}
+write.csv(res, file = "deseq_myresults.csv")
+```
+
+
+#Section 2. Pathway Analysis
+
+Here we are going to use the **gage** package for pathway analysis. Once we have a list of enriched pathways, we're going to use the **pathview** package to draw pathway diagrams, shading the molecules in the pathway by their degree of up/down-regulation.
+
+```{r}
+# Run in your R console (i.e. not your Rmarkdown doc!)
+#BiocManager::install( c("pathview", "gage", "gageData") )
+```
+
+
+```{r}
+library(pathview)
+library(gage)
+library(gageData)
+```
+
+```{r}
+data(kegg.sets.hs)
+data(sigmet.idx.hs)
+
+# Focus on signaling and metabolic pathways only
+kegg.sets.hs = kegg.sets.hs[sigmet.idx.hs]
+
+# Examine the first 3 pathways
+head(kegg.sets.hs, 3)
+```
+
+Our input will be a vector of fold change values with ENTREZ gene IDs as names. 
+
+```{r}
+foldchanges = res$log2FoldChange
+names(foldchanges) = res$entrez
+head(foldchanges)
+```
+
+```{r}
+# Get the results
+keggres = gage(foldchanges, gsets=kegg.sets.hs)
+```
+
+```{r}
+attributes(keggres)
+```
+
+```{r}
+head(keggres$less)
+```
+
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa04110")
+
+```
+
+```{r}
+knitr::include_graphics("hsa04110.pathview.png")
+```
+
+Try for high resolution figure
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa04110", kegg.native=FALSE)
+
+```
+
+To use reactome online we need a files of gene IDs in a particular format
+
+
+```{r}
+sig_genes <- res[res$padj <= 0.05 & !is.na(res$padj), "symbol"]
+print(paste("Total number of significant genes:", length(sig_genes)))
+```
+
+```{r}
+write.table(sig_genes, file="significant_genes.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)
+```
+
+
+
+
+
+
+
+
+

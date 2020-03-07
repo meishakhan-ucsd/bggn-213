@@ -1,0 +1,84 @@
+---
+title: "class17"
+author: "Meisha Khan"
+date: "3/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Coronavirus
+
+Here we analyze infection data for the 2019 novel Coronavirus COVID-19 (2019-nCoV) epidemic. The raw data is pulled from the Johns Hopkins University Center for Systems Science and Engineering (JHU CCSE) Coronavirus repository.
+
+A CSV file is available here https://github.com/RamiKrispin/coronavirus-csv
+
+
+```{r}
+url <- "https://tinyurl.com/COVID-2019"
+virus <- read.csv(url)
+
+tail(virus)
+```
+
+
+> Q1. How many total infected cases are there around the world? 
+
+```{r}
+total_cases <- (sum(virus$cases))
+total_cases
+```
+
+
+> Q2. How many deaths linked to infected cases have there been? 
+
+Let's have a look at the *$type* column
+
+```{r}
+table(virus$type)
+```
+
+```{r}
+death <- (virus$type == "death")
+(virus[death,])
+```
+
+```{r}
+total_death <- (sum(virus[death,"cases"]))
+total_death
+```
+
+> Q3. What is the overall death rate? US? Italy? China? 
+
+
+```{r}
+round(total_death/total_cases * 100, 2)
+```
+
+> Q4. What is the overall China death rate?
+
+```{r}
+China <- (virus$Country.Region == "mainland China")
+China
+
+```
+
+
+> Q5. What is the overall Italy death rate?
+
+> Q6. What is the overall Iran death rate?
+
+> Q7. What is the overall in the US death rate?
+
+
+Submit a link to your Knitted GitHub document (i.e. the .md file)
+
+
+
+
+
+
+
+

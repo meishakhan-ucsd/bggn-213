@@ -1,0 +1,207 @@
+---
+title: 'Class 6: R Functions'
+author: "Meisha Khan"
+date: "1/24/2020"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## This is a level 2 heading
+
+This is **regular** old *text*!
+
+### This is a level 3 heading
+
+
+
+and a list of stuff
+
+- thing one
+- thing two
+- and another thing
+
+
+
+```{r}
+plot(1:5, col="pink", type="o")
+```
+
+let's insert a code chunk with the shortcut `Option-CMD-i`:
+
+```{r}
+x <- c(1:10)
+x
+```
+
+
+here is my analysis of new data. it looks ok.. the mean of your data is `r mean(x)`.
+
+## More on reading input files
+
+We will use the read.table input
+must have "file" for read.table
+other common arguments: sep = "\t" (tab), header = (TRUE/FALSE)
+
+## TEST FILE 1
+```{r}
+x <- read.table("test1.txt", header = TRUE, sep = ",")
+x
+```
+
+OR
+
+```{r}
+x <- read.csv("test1.txt")
+x
+```
+
+## TEST FILE 2
+
+```{r}
+x2 <- read.table("test2.txt", header = TRUE, sep = "$")
+x2
+```
+
+## TEST FILE 3
+
+```{r}
+x3 <- read.table("test3.txt")
+x3
+```
+
+
+
+
+## OUR FIRST FUNCTION
+
+This is an example function named `add` with input `x` and `y`
+
+```{r}
+add <- function(x, y=1) {
+ # Sum the input x and y
+ x + y
+}
+```
+
+Let's try using it here...
+
+```{r}
+add(c(1,6,2), 4)
+```
+
+OR
+
+```{r}
+add(x=c(1,6,2), y=4)
+```
+same thing
+
+other examples: 
+
+1. 
+```{r}
+add(x=1, y=4)
+add(1, 4)
+add(1)
+```
+
+2. 
+```{r}
+add( c(1, 2, 3) )
+add( c(1, 2, 3), 4 )
+```
+
+### if you do a function more than 3 times, its time to **function**
+
+Start with a working code snippet, simplify, reduce calculation duplication, and finally *turn it into a function!*
+
+range function calculates min and max
+
+```{r}
+x <- c(10,4,22,6)
+min(x)
+max(x)
+range(x)
+```
+
+A 2nd example function to re-scale data to lie between 0 and 1
+
+```{r}
+rescale <- function(x) {
+ rng <-range(x)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+Let's try using it here...
+
+```{r}
+rescale(1:10)
+```
+
+what happens if NA is used? 
+
+```{r}
+rescale( c(1:10, NA))
+```
+we broke it - wmhy? well...
+
+```{r}
+x <- c(1:10, na.rm = FALSE)
+ rng <-range(x)
+ rng
+```
+here we ommitted NA from being included
+
+```{r}
+x <- c(1:10, na.rm = TRUE)
+ rng <-range(x)
+ rng
+```
+
+FIX FOR missing values NAs
+
+```{r}
+rescale2 <- function(x) {
+ rng <-range(x, na.rm=TRUE)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+```{r}
+rescale2( c(1:10, NA))
+```
+
+take piece of code, extract code, make it simpler, probably break it, figure whats broken, reiterate it, and then finally find function
+
+```{r}
+rescale3 <- function(x, na.rm=TRUE, plot=FALSE) {
+  
+ rng <-range(x, na.rm=na.rm)
+ print("Hello")
+ 
+ answer <- (x - rng[1]) / (rng[2] - rng[1])
+ 
+ print("is it me you are looking for?")
+ 
+ if(plot) {
+   print("please don't sing to me")
+ plot(answer, typ="b", lwd=4)
+ }
+ 
+ print("I can see it in ...")
+ return(answer)
+ 
+}
+```
+
+```{r}
+rescale3(x, plot=TRUE)
+```
+
+

@@ -1,0 +1,477 @@
+---
+title: 'Class 6: R Functions'
+author: "Meisha Khan"
+date: "1/24/2020"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## This is a level 2 heading
+
+This is **regular** old *text*!
+
+### This is a level 3 heading
+
+
+
+and a list of stuff
+
+- thing one
+- thing two
+- and another thing
+
+
+
+```{r}
+plot(1:5, col="pink", type="o")
+```
+
+let's insert a code chunk with the shortcut `Option-CMD-i`:
+
+```{r}
+x <- c(1:10)
+x
+```
+
+
+here is my analysis of new data. it looks ok.. the mean of your data is `r mean(x)`.
+
+## More on reading input files
+
+We will use the read.table input
+must have "file" for read.table
+other common arguments: sep = "\t" (tab), header = (TRUE/FALSE)
+
+## TEST FILE 1
+```{r}
+x <- read.table("test1.txt", header = TRUE, sep = ",")
+x
+```
+
+OR
+
+```{r}
+x <- read.csv("test1.txt")
+x
+```
+
+## TEST FILE 2
+
+```{r}
+x2 <- read.table("test2.txt", header = TRUE, sep = "$")
+x2
+```
+
+## TEST FILE 3
+
+```{r}
+x3 <- read.table("test3.txt")
+x3
+```
+
+
+
+
+## OUR FIRST FUNCTION
+
+This is an example function named `add` with input `x` and `y`
+
+```{r}
+add <- function(x, y=1) {
+ # Sum the input x and y
+ x + y
+}
+```
+
+Let's try using it here...
+
+```{r}
+add(c(1,6,2), 4)
+```
+
+OR
+
+```{r}
+add(x=c(1,6,2), y=4)
+```
+same thing
+
+what about? 
+```{r eval = FALSE}
+add(1,6,2)
+```
+doesnt work 
+
+```{r eval= FALSE}
+add(1, 2, 2)
+add(x=1, y=“b”)
+```
+
+other examples: 
+
+1. 
+```{r}
+add(x=1, y=4)
+add(1, 4)
+add(1)
+```
+
+2. 
+```{r}
+add( c(1, 2, 3) )
+add( c(1, 2, 3), 4 )
+```
+
+### if you do a function more than 3 times, its time to **function**
+
+Start with a working code snippet, simplify, reduce calculation duplication, and finally *turn it into a function!*
+
+range function calculates min and max
+
+```{r}
+x <- c(10,4,22,6)
+min(x)
+max(x)
+range(x)
+```
+
+A 2nd example function to re-scale data to lie between 0 and 1
+
+```{r}
+rescale <- function(x) {
+ rng <-range(x)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+Let's try using it here...
+
+```{r}
+rescale(1:10)
+```
+
+what happens if NA is used? 
+
+```{r}
+rescale( c(1:10, NA))
+```
+we broke it - wmhy? well...
+
+```{r}
+x <- c(1:10, na.rm = FALSE)
+ rng <-range(x)
+ rng
+```
+here we ommitted NA from being included
+
+```{r}
+x <- c(1:10, na.rm = TRUE)
+ rng <-range(x)
+ rng
+```
+
+FIX FOR missing values NAs
+
+```{r}
+rescale2 <- function(x) {
+ rng <-range(x, na.rm=TRUE)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+```{r}
+rescale2( c(1:10, NA))
+```
+
+take piece of code, extract code, make it simpler, probably break it, figure whats broken, reiterate it, and then finally find function
+
+```{r}
+rescale3 <- function(x, na.rm=TRUE, plot=FALSE) {
+  
+ rng <-range(x, na.rm=na.rm)
+ print("Hello")
+ 
+ answer <- (x - rng[1]) / (rng[2] - rng[1])
+ 
+ print("is it me you are looking for?")
+ 
+ if(plot) {
+   print("please don't sing to me")
+ plot(answer, typ="b", lwd=4)
+ }
+ 
+ print("I can see it in ...")
+ return(answer)
+ 
+}
+```
+
+```{r}
+rescale3(x, plot=TRUE)
+```
+
+
+
+
+## SECTION 1B
+
+To use the functions from any package we have installed, we use `library` function to load it
+
+```{r}
+library(bio3d)
+```
+
+
+# Can you improve this analysis code?
+
+```{r}
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s1, chain="A", elety="CA")
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+```
+
+
+
+```{r}
+hc <- hclust( dist( rbind(s1.b, s2.b, s3.b) ) )
+plot(hc)
+```
+
+**Q1. What type of object is returned from the read.pdb() function?** 
+- (same deal as read.delim/read.csv, etc)
+- returns a list of class 'pdb" with several components
+
+```{r}
+s1 <- read.pdb("4AKE")
+s1
+```
+
+
+```{r}
+class(s1)
+```
+sse = secondary structure element 
+
+```{r}
+str(s1)
+```
+
+
+```{r}
+s1$seqres
+```
+
+```{r}
+aa321(s1$seqres)
+```
+
+**Q2. What does the trim.pdb() function do?**
+
+- trim a PBD object to a subset of atoms
+- produce a new smaller pdb object, containing a subset of atoms, from a given larger pdb object.
+
+```{r}
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s1.chainA
+```
+
+```{r}
+class(s1.chainA)
+```
+
+```{r}
+str(s1.chainA)
+```
+
+
+**Q3. What input parameter would turn off the marginal black and grey rectangles in the plots and what do they represent in this case?**
+
+### make simplified code omg 
+
+```{r}
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+points(s2.b, col= "blue", typ = "l")
+points(s3.b, col= "red", typ= "l")
+```
+
+
+#fixing code
+
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+
+
+boil down to essential snippet: 
+- read.pdb 
+- trim.pdb
+- plotb3
+--> generalize, input for plot 
+
+put it into body of function and see what happens 
+
+
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+```{r}
+s <- function(x) 
+s.pbd <- read.pdb(x)
+s("4AKE")
+```
+
+```{r}
+s <- function(protein) {
+read.pdb(protein)
+}
+s("4AKE")
+```
+
+```{r}
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+```
+
+```{r}
+s <- read.pdb(protein)
+s("4AKE")
+```
+
+
+```{r}
+s <- function(protein) {
+read.pdb(protein)
+}
+a <-s("4AKE")
+```
+```{r}
+a
+```
+
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+
+schain <- function(sA, chain="A", elety="CA")
+trim.pdb(sA)
+schain(sA)
+
+```{r}
+a.schain <- trim.pdb(a, chain="A", elety="CA" )
+a.schain
+```
+
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+ 
+atoms <- a.schain$atom$b
+
+```{r}
+atoms <- a.schain$atom$b
+atoms
+```
+ 
+```{r}
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+s1.b
+```
+ 
+ 
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+ 
+ 
+plot.proteins <- (atoms, sse=s1.chainA, typ="l", ylab="Bfactor")
+plot_colors <- (col = "pink", "blue", "purple")
+
+```{r}
+plot.proteins <- (atoms, sse=s1.chainA, typ="l", ylab="Bfactor")
+plot_colors <- (col = "pink", "blue", "purple")
+```
+
+
+combine all into one function 
+
+s <- function(protein) {
+read.pdb(protein)
+}
+s("4AKE")
+ 
+a.schain <- trim.pdb(a, chain="A", elety="CA" )
+a.schain
+
+atoms <- a.schain$atom$b
+atoms
+
+plot.proteins <- (atoms, sse=s1.chainA, typ="l", ylab="Bfactor")
+plot_colors <- (col = "pink", "blue", "purple")
+
+
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+protein_analysis_plots <- function(protein) {
+s <- read.pdb(protein)
+s.chain <- trim.pdb(s, chain="A", elety="CA")
+atoms <- (s.chain$atom$b)
+plot.proteins <- (atoms, sse=s1.chainA, typ="l", ylab="Bfactor", col= plot_colors[i])
+plot_colors <- c("pink", "blue", "purple")
+protein <- c(4AKE", "1AKE", "1E4Y")
+protein_analysis_plots(protein)
+}
+
+```{r}
+protein_analysis_plots <- function(protein) {
+s <- read.pdb(protein)
+s.chain <- trim.pdb(s, chain="A", elety="CA")
+atoms <- (s.chain$atom$b)
+plot.proteins <- (atoms, sse=s1.chainA, typ="l", ylab="Bfactor", col= plot_colors[i])
+plot_colors <- c("pink", "blue", "purple")
+protein <- c(4AKE", "1AKE", "1E4Y")
+protein_analysis_plots(protein)
+}
+
+```
+
+```{r}
+function
+```
+
+  for (i in 1:length(protein[i]))
+    plot(protein_analysis_plot)

@@ -1,0 +1,982 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Class 6: R Functions},
+            pdfauthor={Meisha Khan},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Class 6: R Functions}
+\author{Meisha Khan}
+\date{1/24/2020}
+
+\begin{document}
+\maketitle
+
+\hypertarget{this-is-a-level-2-heading}{%
+\subsection{This is a level 2 heading}\label{this-is-a-level-2-heading}}
+
+This is \textbf{regular} old \emph{text}!
+
+\hypertarget{this-is-a-level-3-heading}{%
+\subsubsection{This is a level 3
+heading}\label{this-is-a-level-3-heading}}
+
+and a list of stuff
+
+\begin{itemize}
+\tightlist
+\item
+  thing one
+\item
+  thing two
+\item
+  and another thing
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DataTypeTok{col=}\StringTok{"pink"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"o"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{class06..Rmd_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+let's insert a code chunk with the shortcut \texttt{Option-CMD-i}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  1  2  3  4  5  6  7  8  9 10
+\end{verbatim}
+
+here is my analysis of new data. it looks ok.. the mean of your data is
+5.5.
+
+\hypertarget{more-on-reading-input-files}{%
+\subsection{More on reading input
+files}\label{more-on-reading-input-files}}
+
+We will use the read.table input must have ``file'' for read.table other
+common arguments: sep = "\t" (tab), header = (TRUE/FALSE)
+
+\hypertarget{test-file-1}{%
+\subsection{TEST FILE 1}\label{test-file-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"test1.txt"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sep =} \StringTok{","}\NormalTok{)}
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Col1 Col2 Col3
+## 1    1    2    3
+## 2    4    5    6
+## 3    7    8    9
+## 4    a    b    c
+\end{verbatim}
+
+OR
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"test1.txt"}\NormalTok{)}
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Col1 Col2 Col3
+## 1    1    2    3
+## 2    4    5    6
+## 3    7    8    9
+## 4    a    b    c
+\end{verbatim}
+
+\hypertarget{test-file-2}{%
+\subsection{TEST FILE 2}\label{test-file-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x2 <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"test2.txt"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sep =} \StringTok{"$"}\NormalTok{)}
+\NormalTok{x2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Col1 Col2 Col3
+## 1    1    2    3
+## 2    4    5    6
+## 3    7    8    9
+## 4    a    b    c
+\end{verbatim}
+
+\hypertarget{test-file-3}{%
+\subsection{TEST FILE 3}\label{test-file-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x3 <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"test3.txt"}\NormalTok{)}
+\NormalTok{x3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   V1 V2 V3
+## 1  1  6  a
+## 2  2  7  b
+## 3  3  8  c
+## 4  4  9  d
+## 5  5 10  e
+\end{verbatim}
+
+\hypertarget{our-first-function}{%
+\subsection{OUR FIRST FUNCTION}\label{our-first-function}}
+
+This is an example function named \texttt{add} with input \texttt{x} and
+\texttt{y}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{add <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x, }\DataTypeTok{y=}\DecValTok{1}\NormalTok{) \{}
+ \CommentTok{# Sum the input x and y}
+\NormalTok{ x }\OperatorTok{+}\StringTok{ }\NormalTok{y}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Let's try using it here\ldots{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  5 10  6
+\end{verbatim}
+
+OR
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{y=}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  5 10  6
+\end{verbatim}
+
+same thing
+
+what about?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+doesnt work
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\KeywordTok{add}\NormalTok{(}\DataTypeTok{x=}\DecValTok{1}\NormalTok{, }\DataTypeTok{y=}\NormalTok{“b”)}
+\end{Highlighting}
+\end{Shaded}
+
+other examples:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{(}\DataTypeTok{x=}\DecValTok{1}\NormalTok{, }\DataTypeTok{y=}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{) )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2 3 4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{add}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{), }\DecValTok{4}\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5 6 7
+\end{verbatim}
+
+\hypertarget{if-you-do-a-function-more-than-3-times-its-time-to-function}{%
+\subsubsection{\texorpdfstring{if you do a function more than 3 times,
+its time to
+\textbf{function}}{if you do a function more than 3 times, its time to function}}\label{if-you-do-a-function-more-than-3-times-its-time-to-function}}
+
+Start with a working code snippet, simplify, reduce calculation
+duplication, and finally \emph{turn it into a function!}
+
+range function calculates min and max
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{22}\NormalTok{,}\DecValTok{6}\NormalTok{)}
+\KeywordTok{min}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{max}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 22
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{range}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  4 22
+\end{verbatim}
+
+A 2nd example function to re-scale data to lie between 0 and 1
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rescale <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{ rng <-}\KeywordTok{range}\NormalTok{(x)}
+\NormalTok{ (x }\OperatorTok{-}\StringTok{ }\NormalTok{rng[}\DecValTok{1}\NormalTok{]) }\OperatorTok{/}\StringTok{ }\NormalTok{(rng[}\DecValTok{2}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{rng[}\DecValTok{1}\NormalTok{])}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Let's try using it here\ldots{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rescale}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667
+##  [8] 0.7777778 0.8888889 1.0000000
+\end{verbatim}
+
+what happens if NA is used?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rescale}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\OtherTok{NA}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] NA NA NA NA NA NA NA NA NA NA NA
+\end{verbatim}
+
+we broke it - wmhy? well\ldots{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\DataTypeTok{na.rm =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{ rng <-}\KeywordTok{range}\NormalTok{(x)}
+\NormalTok{ rng}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  0 10
+\end{verbatim}
+
+here we ommitted NA from being included
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{ rng <-}\KeywordTok{range}\NormalTok{(x)}
+\NormalTok{ rng}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  1 10
+\end{verbatim}
+
+FIX FOR missing values NAs
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rescale2 <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{ rng <-}\KeywordTok{range}\NormalTok{(x, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{ (x }\OperatorTok{-}\StringTok{ }\NormalTok{rng[}\DecValTok{1}\NormalTok{]) }\OperatorTok{/}\StringTok{ }\NormalTok{(rng[}\DecValTok{2}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{rng[}\DecValTok{1}\NormalTok{])}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rescale2}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\OtherTok{NA}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667
+##  [8] 0.7777778 0.8888889 1.0000000        NA
+\end{verbatim}
+
+take piece of code, extract code, make it simpler, probably break it,
+figure whats broken, reiterate it, and then finally find function
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rescale3 <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{plot=}\OtherTok{FALSE}\NormalTok{) \{}
+  
+\NormalTok{ rng <-}\KeywordTok{range}\NormalTok{(x, }\DataTypeTok{na.rm=}\NormalTok{na.rm)}
+ \KeywordTok{print}\NormalTok{(}\StringTok{"Hello"}\NormalTok{)}
+ 
+\NormalTok{ answer <-}\StringTok{ }\NormalTok{(x }\OperatorTok{-}\StringTok{ }\NormalTok{rng[}\DecValTok{1}\NormalTok{]) }\OperatorTok{/}\StringTok{ }\NormalTok{(rng[}\DecValTok{2}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{rng[}\DecValTok{1}\NormalTok{])}
+ 
+ \KeywordTok{print}\NormalTok{(}\StringTok{"is it me you are looking for?"}\NormalTok{)}
+ 
+ \ControlFlowTok{if}\NormalTok{(plot) \{}
+   \KeywordTok{print}\NormalTok{(}\StringTok{"please don't sing to me"}\NormalTok{)}
+ \KeywordTok{plot}\NormalTok{(answer, }\DataTypeTok{typ=}\StringTok{"b"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{4}\NormalTok{)}
+\NormalTok{ \}}
+ 
+ \KeywordTok{print}\NormalTok{(}\StringTok{"I can see it in ..."}\NormalTok{)}
+ \KeywordTok{return}\NormalTok{(answer)}
+ 
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rescale3}\NormalTok{(x, }\DataTypeTok{plot=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Hello"
+## [1] "is it me you are looking for?"
+## [1] "please don't sing to me"
+\end{verbatim}
+
+\includegraphics{class06..Rmd_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+\begin{verbatim}
+## [1] "I can see it in ..."
+\end{verbatim}
+
+\begin{verbatim}
+##                                                                                 
+## 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667 0.7777778 
+##                         na.rm 
+## 0.8888889 1.0000000 0.0000000
+\end{verbatim}
+
+\hypertarget{section-1b}{%
+\subsection{SECTION 1B}\label{section-1b}}
+
+To use the functions from any package we have installed, we use
+\texttt{library} function to load it
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(bio3d)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{can-you-improve-this-analysis-code}{%
+\section{Can you improve this analysis
+code?}\label{can-you-improve-this-analysis-code}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s1 <-}\StringTok{ }\KeywordTok{read.pdb}\NormalTok{(}\StringTok{"4AKE"}\NormalTok{) }\CommentTok{# kinase with drug}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Note: Accessing on-line PDB file
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s2 <-}\StringTok{ }\KeywordTok{read.pdb}\NormalTok{(}\StringTok{"1AKE"}\NormalTok{) }\CommentTok{# kinase no drug}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Note: Accessing on-line PDB file
+##    PDB has ALT records, taking A only, rm.alt=TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s3 <-}\StringTok{ }\KeywordTok{read.pdb}\NormalTok{(}\StringTok{"1E4Y"}\NormalTok{) }\CommentTok{# kinase with drug}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Note: Accessing on-line PDB file
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s1.chainA <-}\StringTok{ }\KeywordTok{trim.pdb}\NormalTok{(s1, }\DataTypeTok{chain=}\StringTok{"A"}\NormalTok{, }\DataTypeTok{elety=}\StringTok{"CA"}\NormalTok{)}
+\NormalTok{s2.chainA <-}\StringTok{ }\KeywordTok{trim.pdb}\NormalTok{(s2, }\DataTypeTok{chain=}\StringTok{"A"}\NormalTok{, }\DataTypeTok{elety=}\StringTok{"CA"}\NormalTok{)}
+\NormalTok{s3.chainA <-}\StringTok{ }\KeywordTok{trim.pdb}\NormalTok{(s1, }\DataTypeTok{chain=}\StringTok{"A"}\NormalTok{, }\DataTypeTok{elety=}\StringTok{"CA"}\NormalTok{)}
+
+\NormalTok{s1.b <-}\StringTok{ }\NormalTok{s1.chainA}\OperatorTok{$}\NormalTok{atom}\OperatorTok{$}\NormalTok{b}
+\NormalTok{s2.b <-}\StringTok{ }\NormalTok{s2.chainA}\OperatorTok{$}\NormalTok{atom}\OperatorTok{$}\NormalTok{b}
+\NormalTok{s3.b <-}\StringTok{ }\NormalTok{s3.chainA}\OperatorTok{$}\NormalTok{atom}\OperatorTok{$}\NormalTok{b}
+
+\KeywordTok{plotb3}\NormalTok{(s1.b, }\DataTypeTok{sse=}\NormalTok{s1.chainA, }\DataTypeTok{typ=}\StringTok{"l"}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{"Bfactor"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{class06..Rmd_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotb3}\NormalTok{(s2.b, }\DataTypeTok{sse=}\NormalTok{s2.chainA, }\DataTypeTok{typ=}\StringTok{"l"}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{"Bfactor"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{class06..Rmd_files/figure-latex/unnamed-chunk-25-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotb3}\NormalTok{(s3.b, }\DataTypeTok{sse=}\NormalTok{s3.chainA, }\DataTypeTok{typ=}\StringTok{"l"}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{"Bfactor"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{class06..Rmd_files/figure-latex/unnamed-chunk-25-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hc <-}\StringTok{ }\KeywordTok{hclust}\NormalTok{( }\KeywordTok{dist}\NormalTok{( }\KeywordTok{rbind}\NormalTok{(s1.b, s2.b, s3.b) ) )}
+\KeywordTok{plot}\NormalTok{(hc)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{class06..Rmd_files/figure-latex/unnamed-chunk-26-1.pdf}
+
+\textbf{Q1. What type of object is returned from the read.pdb()
+function?} - (same deal as read.delim/read.csv, etc) - returns a list of
+class 'pdb" with several components
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s1 <-}\StringTok{ }\KeywordTok{read.pdb}\NormalTok{(}\StringTok{"4AKE"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Note: Accessing on-line PDB file
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in get.pdb(file, path = tempdir(), verbose = FALSE): /var/folders/dt/
+## 4ytc3pnn6wz_t86ybfkwfdlr0000gn/T//RtmpYBVhnd/4AKE.pdb exists. Skipping download
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Call:  read.pdb(file = "4AKE")
+## 
+##    Total Models#: 1
+##      Total Atoms#: 3459,  XYZs#: 10377  Chains#: 2  (values: A B)
+## 
+##      Protein Atoms#: 3312  (residues/Calpha atoms#: 428)
+##      Nucleic acid Atoms#: 0  (residues/phosphate atoms#: 0)
+## 
+##      Non-protein/nucleic Atoms#: 147  (residues: 147)
+##      Non-protein/nucleic resid values: [ HOH (147) ]
+## 
+##    Protein sequence:
+##       MRIILLGAPGAGKGTQAQFIMEKYGIPQISTGDMLRAAVKSGSELGKQAKDIMDAGKLVT
+##       DELVIALVKERIAQEDCRNGFLLDGFPRTIPQADAMKEAGINVDYVLEFDVPDELIVDRI
+##       VGRRVHAPSGRVYHVKFNPPKVEGKDDVTGEELTTRKDDQEETVRKRLVEYHQMTAPLIG
+##       YYSKEAEAGNTKYAKVDGTKPVAEVRADLEKILGMRIILLGAPGA...<cut>...KILG
+## 
+## + attr: atom, xyz, seqres, helix, sheet,
+##         calpha, remark, call
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{(s1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "pdb" "sse"
+\end{verbatim}
+
+sse = secondary structure element
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(s1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 8
+##  $ atom  :'data.frame':  3459 obs. of  16 variables:
+##   ..$ type  : chr [1:3459] "ATOM" "ATOM" "ATOM" "ATOM" ...
+##   ..$ eleno : int [1:3459] 1 2 3 4 5 6 7 8 9 10 ...
+##   ..$ elety : chr [1:3459] "N" "CA" "C" "O" ...
+##   ..$ alt   : chr [1:3459] NA NA NA NA ...
+##   ..$ resid : chr [1:3459] "MET" "MET" "MET" "MET" ...
+##   ..$ chain : chr [1:3459] "A" "A" "A" "A" ...
+##   ..$ resno : int [1:3459] 1 1 1 1 1 1 1 1 2 2 ...
+##   ..$ insert: chr [1:3459] NA NA NA NA ...
+##   ..$ x     : num [1:3459] -10.93 -9.9 -9.17 -9.8 -10.59 ...
+##   ..$ y     : num [1:3459] -24.9 -24.4 -23.3 -22.3 -24 ...
+##   ..$ z     : num [1:3459] -9.52 -10.48 -9.81 -9.35 -11.77 ...
+##   ..$ o     : num [1:3459] 1 1 1 1 1 1 1 1 1 1 ...
+##   ..$ b     : num [1:3459] 41.5 29 27.9 26.4 34.2 ...
+##   ..$ segid : chr [1:3459] NA NA NA NA ...
+##   ..$ elesy : chr [1:3459] "N" "C" "C" "O" ...
+##   ..$ charge: chr [1:3459] NA NA NA NA ...
+##  $ xyz   : 'xyz' num [1, 1:10377] -10.93 -24.89 -9.52 -9.9 -24.42 ...
+##  $ seqres: Named chr [1:428] "MET" "ARG" "ILE" "ILE" ...
+##   ..- attr(*, "names")= chr [1:428] "A" "A" "A" "A" ...
+##  $ helix :List of 4
+##   ..$ start: Named num [1:19] 13 31 44 61 75 90 113 161 202 13 ...
+##   .. ..- attr(*, "names")= chr [1:19] "" "" "" "" ...
+##   ..$ end  : Named num [1:19] 24 40 54 73 77 98 121 187 213 24 ...
+##   .. ..- attr(*, "names")= chr [1:19] "" "" "" "" ...
+##   ..$ chain: chr [1:19] "A" "A" "A" "A" ...
+##   ..$ type : chr [1:19] "5" "1" "1" "1" ...
+##  $ sheet :List of 4
+##   ..$ start: Named num [1:14] 192 105 2 81 27 123 131 192 105 2 ...
+##   .. ..- attr(*, "names")= chr [1:14] "" "" "" "" ...
+##   ..$ end  : Named num [1:14] 197 110 7 84 29 126 134 197 110 7 ...
+##   .. ..- attr(*, "names")= chr [1:14] "" "" "" "" ...
+##   ..$ chain: chr [1:14] "A" "A" "A" "A" ...
+##   ..$ sense: chr [1:14] "0" "1" "1" "1" ...
+##  $ calpha: logi [1:3459] FALSE TRUE FALSE FALSE FALSE FALSE ...
+##  $ remark:List of 1
+##   ..$ biomat:List of 4
+##   .. ..$ num   : int 1
+##   .. ..$ chain :List of 1
+##   .. .. ..$ : chr [1:2] "A" "B"
+##   .. ..$ mat   :List of 1
+##   .. .. ..$ :List of 1
+##   .. .. .. ..$ A B: num [1:3, 1:4] 1 0 0 0 1 0 0 0 1 0 ...
+##   .. ..$ method: chr "AUTHOR"
+##  $ call  : language read.pdb(file = "4AKE")
+##  - attr(*, "class")= chr [1:2] "pdb" "sse"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s1}\OperatorTok{$}\NormalTok{seqres}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "MET" "ARG" "ILE" "ILE" "LEU" "LEU" "GLY" "ALA" "PRO" "GLY" "ALA" "GLY" "LYS" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "GLY" "THR" "GLN" "ALA" "GLN" "PHE" "ILE" "MET" "GLU" "LYS" "TYR" "GLY" "ILE" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "PRO" "GLN" "ILE" "SER" "THR" "GLY" "ASP" "MET" "LEU" "ARG" "ALA" "ALA" "VAL" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "LYS" "SER" "GLY" "SER" "GLU" "LEU" "GLY" "LYS" "GLN" "ALA" "LYS" "ASP" "ILE" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "MET" "ASP" "ALA" "GLY" "LYS" "LEU" "VAL" "THR" "ASP" "GLU" "LEU" "VAL" "ILE" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "ALA" "LEU" "VAL" "LYS" "GLU" "ARG" "ILE" "ALA" "GLN" "GLU" "ASP" "CYS" "ARG" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "ASN" "GLY" "PHE" "LEU" "LEU" "ASP" "GLY" "PHE" "PRO" "ARG" "THR" "ILE" "PRO" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "GLN" "ALA" "ASP" "ALA" "MET" "LYS" "GLU" "ALA" "GLY" "ILE" "ASN" "VAL" "ASP" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "TYR" "VAL" "LEU" "GLU" "PHE" "ASP" "VAL" "PRO" "ASP" "GLU" "LEU" "ILE" "VAL" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "ASP" "ARG" "ILE" "VAL" "GLY" "ARG" "ARG" "VAL" "HIS" "ALA" "PRO" "SER" "GLY" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "ARG" "VAL" "TYR" "HIS" "VAL" "LYS" "PHE" "ASN" "PRO" "PRO" "LYS" "VAL" "GLU" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "GLY" "LYS" "ASP" "ASP" "VAL" "THR" "GLY" "GLU" "GLU" "LEU" "THR" "THR" "ARG" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "LYS" "ASP" "ASP" "GLN" "GLU" "GLU" "THR" "VAL" "ARG" "LYS" "ARG" "LEU" "VAL" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "GLU" "TYR" "HIS" "GLN" "MET" "THR" "ALA" "PRO" "LEU" "ILE" "GLY" "TYR" "TYR" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "SER" "LYS" "GLU" "ALA" "GLU" "ALA" "GLY" "ASN" "THR" "LYS" "TYR" "ALA" "LYS" 
+##     A     A     A     A     A     A     A     A     A     A     A     A     A 
+## "VAL" "ASP" "GLY" "THR" "LYS" "PRO" "VAL" "ALA" "GLU" "VAL" "ARG" "ALA" "ASP" 
+##     A     A     A     A     A     A     B     B     B     B     B     B     B 
+## "LEU" "GLU" "LYS" "ILE" "LEU" "GLY" "MET" "ARG" "ILE" "ILE" "LEU" "LEU" "GLY" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "ALA" "PRO" "GLY" "ALA" "GLY" "LYS" "GLY" "THR" "GLN" "ALA" "GLN" "PHE" "ILE" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "MET" "GLU" "LYS" "TYR" "GLY" "ILE" "PRO" "GLN" "ILE" "SER" "THR" "GLY" "ASP" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "MET" "LEU" "ARG" "ALA" "ALA" "VAL" "LYS" "SER" "GLY" "SER" "GLU" "LEU" "GLY" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "LYS" "GLN" "ALA" "LYS" "ASP" "ILE" "MET" "ASP" "ALA" "GLY" "LYS" "LEU" "VAL" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "THR" "ASP" "GLU" "LEU" "VAL" "ILE" "ALA" "LEU" "VAL" "LYS" "GLU" "ARG" "ILE" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "ALA" "GLN" "GLU" "ASP" "CYS" "ARG" "ASN" "GLY" "PHE" "LEU" "LEU" "ASP" "GLY" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "PHE" "PRO" "ARG" "THR" "ILE" "PRO" "GLN" "ALA" "ASP" "ALA" "MET" "LYS" "GLU" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "ALA" "GLY" "ILE" "ASN" "VAL" "ASP" "TYR" "VAL" "LEU" "GLU" "PHE" "ASP" "VAL" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "PRO" "ASP" "GLU" "LEU" "ILE" "VAL" "ASP" "ARG" "ILE" "VAL" "GLY" "ARG" "ARG" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "VAL" "HIS" "ALA" "PRO" "SER" "GLY" "ARG" "VAL" "TYR" "HIS" "VAL" "LYS" "PHE" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "ASN" "PRO" "PRO" "LYS" "VAL" "GLU" "GLY" "LYS" "ASP" "ASP" "VAL" "THR" "GLY" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "GLU" "GLU" "LEU" "THR" "THR" "ARG" "LYS" "ASP" "ASP" "GLN" "GLU" "GLU" "THR" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "VAL" "ARG" "LYS" "ARG" "LEU" "VAL" "GLU" "TYR" "HIS" "GLN" "MET" "THR" "ALA" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "PRO" "LEU" "ILE" "GLY" "TYR" "TYR" "SER" "LYS" "GLU" "ALA" "GLU" "ALA" "GLY" 
+##     B     B     B     B     B     B     B     B     B     B     B     B     B 
+## "ASN" "THR" "LYS" "TYR" "ALA" "LYS" "VAL" "ASP" "GLY" "THR" "LYS" "PRO" "VAL" 
+##     B     B     B     B     B     B     B     B     B     B     B     B 
+## "ALA" "GLU" "VAL" "ARG" "ALA" "ASP" "LEU" "GLU" "LYS" "ILE" "LEU" "GLY"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{aa321}\NormalTok{(s1}\OperatorTok{$}\NormalTok{seqres)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   [1] "M" "R" "I" "I" "L" "L" "G" "A" "P" "G" "A" "G" "K" "G" "T" "Q" "A" "Q"
+##  [19] "F" "I" "M" "E" "K" "Y" "G" "I" "P" "Q" "I" "S" "T" "G" "D" "M" "L" "R"
+##  [37] "A" "A" "V" "K" "S" "G" "S" "E" "L" "G" "K" "Q" "A" "K" "D" "I" "M" "D"
+##  [55] "A" "G" "K" "L" "V" "T" "D" "E" "L" "V" "I" "A" "L" "V" "K" "E" "R" "I"
+##  [73] "A" "Q" "E" "D" "C" "R" "N" "G" "F" "L" "L" "D" "G" "F" "P" "R" "T" "I"
+##  [91] "P" "Q" "A" "D" "A" "M" "K" "E" "A" "G" "I" "N" "V" "D" "Y" "V" "L" "E"
+## [109] "F" "D" "V" "P" "D" "E" "L" "I" "V" "D" "R" "I" "V" "G" "R" "R" "V" "H"
+## [127] "A" "P" "S" "G" "R" "V" "Y" "H" "V" "K" "F" "N" "P" "P" "K" "V" "E" "G"
+## [145] "K" "D" "D" "V" "T" "G" "E" "E" "L" "T" "T" "R" "K" "D" "D" "Q" "E" "E"
+## [163] "T" "V" "R" "K" "R" "L" "V" "E" "Y" "H" "Q" "M" "T" "A" "P" "L" "I" "G"
+## [181] "Y" "Y" "S" "K" "E" "A" "E" "A" "G" "N" "T" "K" "Y" "A" "K" "V" "D" "G"
+## [199] "T" "K" "P" "V" "A" "E" "V" "R" "A" "D" "L" "E" "K" "I" "L" "G" "M" "R"
+## [217] "I" "I" "L" "L" "G" "A" "P" "G" "A" "G" "K" "G" "T" "Q" "A" "Q" "F" "I"
+## [235] "M" "E" "K" "Y" "G" "I" "P" "Q" "I" "S" "T" "G" "D" "M" "L" "R" "A" "A"
+## [253] "V" "K" "S" "G" "S" "E" "L" "G" "K" "Q" "A" "K" "D" "I" "M" "D" "A" "G"
+## [271] "K" "L" "V" "T" "D" "E" "L" "V" "I" "A" "L" "V" "K" "E" "R" "I" "A" "Q"
+## [289] "E" "D" "C" "R" "N" "G" "F" "L" "L" "D" "G" "F" "P" "R" "T" "I" "P" "Q"
+## [307] "A" "D" "A" "M" "K" "E" "A" "G" "I" "N" "V" "D" "Y" "V" "L" "E" "F" "D"
+## [325] "V" "P" "D" "E" "L" "I" "V" "D" "R" "I" "V" "G" "R" "R" "V" "H" "A" "P"
+## [343] "S" "G" "R" "V" "Y" "H" "V" "K" "F" "N" "P" "P" "K" "V" "E" "G" "K" "D"
+## [361] "D" "V" "T" "G" "E" "E" "L" "T" "T" "R" "K" "D" "D" "Q" "E" "E" "T" "V"
+## [379] "R" "K" "R" "L" "V" "E" "Y" "H" "Q" "M" "T" "A" "P" "L" "I" "G" "Y" "Y"
+## [397] "S" "K" "E" "A" "E" "A" "G" "N" "T" "K" "Y" "A" "K" "V" "D" "G" "T" "K"
+## [415] "P" "V" "A" "E" "V" "R" "A" "D" "L" "E" "K" "I" "L" "G"
+\end{verbatim}
+
+\textbf{Q2. What does the trim.pdb() function do?}
+
+\begin{itemize}
+\tightlist
+\item
+  trim a PBD object to a subset of atoms
+\item
+  produce a new smaller pdb object, containing a subset of atoms, from a
+  given larger pdb object.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s1.chainA <-}\StringTok{ }\KeywordTok{trim.pdb}\NormalTok{(s1, }\DataTypeTok{chain=}\StringTok{"A"}\NormalTok{, }\DataTypeTok{elety=}\StringTok{"CA"}\NormalTok{)}
+\NormalTok{s1.chainA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Call:  trim.pdb(pdb = s1, chain = "A", elety = "CA")
+## 
+##    Total Models#: 1
+##      Total Atoms#: 214,  XYZs#: 642  Chains#: 1  (values: A)
+## 
+##      Protein Atoms#: 214  (residues/Calpha atoms#: 214)
+##      Nucleic acid Atoms#: 0  (residues/phosphate atoms#: 0)
+## 
+##      Non-protein/nucleic Atoms#: 0  (residues: 0)
+##      Non-protein/nucleic resid values: [ none ]
+## 
+##    Protein sequence:
+##       MRIILLGAPGAGKGTQAQFIMEKYGIPQISTGDMLRAAVKSGSELGKQAKDIMDAGKLVT
+##       DELVIALVKERIAQEDCRNGFLLDGFPRTIPQADAMKEAGINVDYVLEFDVPDELIVDRI
+##       VGRRVHAPSGRVYHVKFNPPKVEGKDDVTGEELTTRKDDQEETVRKRLVEYHQMTAPLIG
+##       YYSKEAEAGNTKYAKVDGTKPVAEVRADLEKILG
+## 
+## + attr: atom, helix, sheet, seqres, xyz,
+##         calpha, call
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{(s1.chainA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "pdb" "sse"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(s1.chainA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 7
+##  $ atom  :'data.frame':  214 obs. of  16 variables:
+##   ..$ type  : chr [1:214] "ATOM" "ATOM" "ATOM" "ATOM" ...
+##   ..$ eleno : int [1:214] 2 10 21 29 37 45 53 57 62 69 ...
+##   ..$ elety : chr [1:214] "CA" "CA" "CA" "CA" ...
+##   ..$ alt   : chr [1:214] NA NA NA NA ...
+##   ..$ resid : chr [1:214] "MET" "ARG" "ILE" "ILE" ...
+##   ..$ chain : chr [1:214] "A" "A" "A" "A" ...
+##   ..$ resno : int [1:214] 1 2 3 4 5 6 7 8 9 10 ...
+##   ..$ insert: chr [1:214] NA NA NA NA ...
+##   ..$ x     : num [1:214] -9.9 -7.03 -5.23 -2.48 -2.56 ...
+##   ..$ y     : num [1:214] -24.4 -22.4 -20.1 -17.5 -15 ...
+##   ..$ z     : num [1:214] -10.48 -9.05 -11.46 -11.03 -13.96 ...
+##   ..$ o     : num [1:214] 1 1 1 1 1 1 1 1 1 1 ...
+##   ..$ b     : num [1:214] 29 18.4 16.2 19.7 20.3 ...
+##   ..$ segid : chr [1:214] NA NA NA NA ...
+##   ..$ elesy : chr [1:214] "C" "C" "C" "C" ...
+##   ..$ charge: chr [1:214] NA NA NA NA ...
+##  $ helix :List of 4
+##   ..$ start: Named num [1:9] 13 31 44 61 75 90 113 161 202
+##   .. ..- attr(*, "names")= chr [1:9] "" "" "" "" ...
+##   ..$ end  : Named num [1:9] 24 40 54 73 77 98 121 187 213
+##   .. ..- attr(*, "names")= chr [1:9] "" "" "" "" ...
+##   ..$ chain: chr [1:9] "A" "A" "A" "A" ...
+##   ..$ type : chr [1:9] "5" "1" "1" "1" ...
+##  $ sheet :List of 4
+##   ..$ start: Named num [1:7] 192 105 2 81 27 123 131
+##   .. ..- attr(*, "names")= chr [1:7] "" "" "" "" ...
+##   ..$ end  : Named num [1:7] 197 110 7 84 29 126 134
+##   .. ..- attr(*, "names")= chr [1:7] "" "" "" "" ...
+##   ..$ chain: chr [1:7] "A" "A" "A" "A" ...
+##   ..$ sense: chr [1:7] "0" "1" "1" "1" ...
+##  $ seqres: Named chr [1:428] "MET" "ARG" "ILE" "ILE" ...
+##   ..- attr(*, "names")= chr [1:428] "A" "A" "A" "A" ...
+##  $ xyz   : 'xyz' num [1, 1:642] -9.9 -24.42 -10.48 -7.03 -22.35 ...
+##  $ calpha: logi [1:214] TRUE TRUE TRUE TRUE TRUE TRUE ...
+##  $ call  : language trim.pdb(pdb = s1, chain = "A", elety = "CA")
+##  - attr(*, "class")= chr [1:2] "pdb" "sse"
+\end{verbatim}
+
+\textbf{Q3. What input parameter would turn off the marginal black and
+grey rectangles in the plots and what do they represent in this case?}
+
+\hypertarget{make-simplified-code-omg}{%
+\subsubsection{make simplified code
+omg}\label{make-simplified-code-omg}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotb3}\NormalTok{(s1.b, }\DataTypeTok{sse=}\NormalTok{s1.chainA, }\DataTypeTok{typ=}\StringTok{"l"}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{"Bfactor"}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(s2.b, }\DataTypeTok{col=} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{typ =} \StringTok{"l"}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(s3.b, }\DataTypeTok{col=} \StringTok{"red"}\NormalTok{, }\DataTypeTok{typ=} \StringTok{"l"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{class06..Rmd_files/figure-latex/unnamed-chunk-35-1.pdf}
+
+\#fixing code
+
+s1 \textless{}- read.pdb(``4AKE'') \# kinase with drug s2 \textless{}-
+read.pdb(``1AKE'') \# kinase no drug s3 \textless{}- read.pdb(``1E4Y'')
+\# kinase with drug s1.chainA \textless{}- trim.pdb(s1, chain=``A'',
+elety=``CA'') s2.chainA \textless{}- trim.pdb(s2, chain=``A'',
+elety=``CA'') s3.chainA \textless{}- trim.pdb(s3, chain=``A'',
+elety=``CA'') s1.b \textless{}- s1.chainA\(atom\)b s2.b \textless{}-
+s2.chainA\(atom\)b s3.b \textless{}- s3.chainA\(atom\)b plotb3(s1.b,
+sse=s1.chainA, typ=``l'', ylab=``Bfactor'') plotb3(s2.b, sse=s2.chainA,
+typ=``l'', ylab=``Bfactor'') plotb3(s3.b, sse=s3.chainA, typ=``l'',
+ylab=``Bfactor'')
+
+boil down to essential snippet: - read.pdb - trim.pdb - plotb3
+--\textgreater{} generalize, input for plot
+
+put it into body of function and see what happens
+
+\end{document}
