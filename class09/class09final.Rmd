@@ -38,7 +38,7 @@ print(km)
 what is in the output object `km`? I can use `attributes()` function to to find this info :-)
 
 ```{r}
-attributes(km)
+attributes(km) 
 ```
 
 
